@@ -8,7 +8,7 @@ type Pipeline struct {
 	// Pipeline Context
 	context *context.Context
 	// Ordered slice of steps to be run
-	pipes []Pipe
+	Pipes []Pipe
 	Queue chan context.Context
 }
 
@@ -17,7 +17,7 @@ func NewPipeline(pipes ...Pipe) Pipeline {
 
 	return Pipeline{
 		context: &ctx,
-		pipes:   pipes,
+		Pipes:   pipes,
 		Queue:   make(chan context.Context),
 	}
 }
@@ -30,7 +30,7 @@ func (p Pipeline) Close() {
 func (p Pipeline) Process(ctx context.Context) (context.Context, error) {
 	var err error
 
-	for _, pipe := range p.pipes {
+	for _, pipe := range p.Pipes {
 		ctx, err = pipe.Do(ctx, err)
 	}
 
@@ -38,7 +38,7 @@ func (p Pipeline) Process(ctx context.Context) (context.Context, error) {
 }
 
 func (p Pipeline) WithPipes(pipes ...Pipe) Pipeline {
-	p.pipes = pipes
+	p.Pipes = pipes
 
 	return p
 }
